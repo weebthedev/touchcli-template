@@ -1,32 +1,16 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("fs")
 
 module.exports = (client) => {
-    client.handleCommands = async () => {
-        const modulesPath = path.join(__dirname, "..", "modules");
-        const commandFiles = [];
+    client.handleCommands = async (commandFolders) => {
 
-        // Function to recursively get all .js files
-        const getFiles = (dir) => {
-            const files = fs.readdirSync(dir);
-            for (const file of files) {
-                const filePath = path.join(dir, file);
-                if (fs.statSync(filePath).isDirectory()) {
-                    getFiles(filePath);
-                } else if (file.endsWith(".js")) {
-                    commandFiles.push(filePath);
-                }
-            }
-        };
+        for (const folder of commandFolders) {
+            const commandFiles = fs.readdirSync(`./modules/${folder}`).filter(file => file.endsWith(".js"));
 
-        // Get all command files
-        getFiles(modulesPath);
-
-        for (const filePath of commandFiles) {
-            const command = require(filePath);
-            if (command.name) {
+            for (const file of commandFiles) {
+                const command = require(`../modules/${folder}/${file}`);
                 await client.commands.set(command.name, command);
             }
         }
+
     }
 }
