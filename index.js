@@ -8,7 +8,7 @@ const eventFiles = fs.readdirSync("./events").filter(file => file.endsWith(".js"
 
 const commandFolders = fs.readdirSync("./modules");
 
-
+ 
 (async () => {
 
     for (const file of handlerFiles) {
